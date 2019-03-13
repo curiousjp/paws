@@ -114,7 +114,13 @@ def loadAndProcessPattern( fn, difficulty, pro ):
 	filtered_pattern.clear();
 
 	# copy the tempo track
-	filtered_pattern.append( pattern[ name_map[ "TEMPO TRACK" ] ] );
+	if( "TEMPO TRACK" in name_map ):
+		filtered_pattern.append( pattern[ name_map[ "TEMPO TRACK" ] ] );
+	else:
+		# in the examples I have seen, there is usually still a "tempo track"
+		# living at track index zero
+		filtered_pattern.append( pattern[ 0 ] );
+
 	# filter the drums and copy
 	f_d_t = filterDrums( pattern[ name_map[ "PART DRUMS" ] ], difficulty, pro );
 	filtered_pattern.append( f_d_t );
