@@ -31,6 +31,10 @@ Worth noting, the Spotify key in these files can span multiple tracks - e.g. `Sp
 
 escape exits, "f" toggles fullscreen, and left and right arrow let you adjust the midi / spotify delay in 0.1 second increments.
 
+## command line options
+```usage: paws.py [-h] [--pro] [--difficulty {easy,medium,hard,expert}] songfile```
+
+
 ## known bugs
 
 Sometimes, the program can't take control of spotify if you haven't played something recently (i.e. you have no current session with the spotify servers.) Usually playing and pausing anything should fix this.
