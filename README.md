@@ -1,10 +1,10 @@
 # p.a.w.s.
 
-p.a.w.s., "play along with spotify" is a deliberately minimal tool for displaying rockband format drum charts, with (non-deliberately) minimal levels of synchronisation to spotify playback. It does not attempt to score your drumming accuracy, and does not require you to have your drums plugged into the computer.
+p.a.w.s., "play along with spotify" is a deliberately minimal tool for displaying rhythym game format drum charts, with (non-deliberately) minimal levels of synchronisation to spotify playback. It does not attempt to score your drumming accuracy, and does not require you to have your drums plugged into the computer.
 
 ## why
 
-I like to play along to music, but am still learning to improvise. An existing chart gives me something to play along with. This solution has less visual noise than something like (the excellent in its own right) Phase Shift, and the use of spotify means that artists are getting paid for their music and there is no pirate audio files are needed.
+I like to play along to music, but am still learning to improvise. An existing chart gives me something to play along with. This solution has less visual noise than something like (the excellent in its own right) Phase Shift, and the use of spotify means that artists are getting paid for their music and there is no need for a (potentially) pirate audio file.
 
 ## dependencies and other setup
 
@@ -14,7 +14,7 @@ You will need to register a spotify app, as described in the [spotipy documentat
 
 ## file formats
 
-You'll need to provide a midi file that conforms to music game notation conventions, and create an ini file to go with it. 
+You'll need to provide a midi file that conforms to music game notation conventions (mostly as used by rockband), and create an ini file to go with it. 
 
 As an example, Magnus Palsson has distributed his track "Positive Force" along with Phase Shift, including a midi file (as "notes.mid"). After renaming the midi file to something more memorable, my ini files look like this:
 ```
@@ -24,7 +24,7 @@ Spotify = spotify:track:1ExS1EPtsWZKcLtvPq37IH
 Delay = -0.3
 ```
 
-Worth noting, the Spotify key in these files can span multiple tracks - Note that in this example, the midi file spans two spotify tracks. In the special case of midi files with multiple tracks, e.g. `Spotify = spotify:track:3WBXyS9Isg4aQBPCuX2GwL,spotify:track:2tQfSfnEFo9OnhYm3mNMj8
+Worth noting, the Spotify key in these files can span multiple tracks - e.g. `Spotify = spotify:track:3WBXyS9Isg4aQBPCuX2GwL,spotify:track:2tQfSfnEFo9OnhYm3mNMj8
 `. In this case, p.a.w.s. won't attempt to continually resync its track position with spotify once per second, as it would do otherwise - it will just sync once, one second into playback.
 
 ## controls
@@ -33,7 +33,7 @@ escape exits, "f" toggles fullscreen, and left and right arrow let you adjust th
 
 ## known bugs
 
-Sometimes, the program can't take control of spotify if you haven't recently played something in it (i.e. you have no current session with the spotify servers.) Usually playing and pausing anything should fix this.
+Sometimes, the program can't take control of spotify if you haven't played something recently (i.e. you have no current session with the spotify servers.) Usually playing and pausing anything should fix this.
 
 It's ugly. Full-screen mode (f) doesn't use native resolutions for some reason.
 
