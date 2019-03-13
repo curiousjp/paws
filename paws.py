@@ -4,8 +4,8 @@ import copy;
 import pygame;
 import configparser;
 import logging;
-import sys;
 import threading;
+import argparse;
 
 from constants import *;
 import pawsload;
@@ -77,17 +77,22 @@ def playPattern( pattern_original, spotify_uri, delay_audio ):
 
 if __name__ == '__main__':
 	logging.basicConfig( level = logging.INFO );
+	parser = argparse.ArgumentParser( description = "p.a.w.s. - play along with spotify for drummers" );
+	parser.add_argument( "songfile", type = argparse.FileType( "r" ) );
+	parser.add_argument( "--pro", action = "store_true" );
+	parser.add_argument( "--difficulty", choices = [ "easy", "medium", "hard", "expert" ], default = "medium" );
+	args = parser.parse_args();
 
-	config_file = sys.argv[1];
-	config = configparser.ConfigParser();
-	config.read( config_file );
+	song_file = configparser.ConfigParser();
+	song_file.read_file( args.songfile );
 
-	pattern = pawsload.loadAndProcessPattern( 
-		config[ "Song" ][ "MidiFile" ], 
-		"medium", True );
+	song_pattern = pawsload.loadAndProcessPattern(
+		song_file[ "Song" ][ "MidiFile" ], 
+		args.difficulty,
+		args.pro );
+	spotify_tracks = song_file[ "Song" ][ "Spotify" ].split( "," );
+	delay = float( song_file[ "Song" ][ "Delay" ] );
 
-	spotify_tracks = config[ "Song" ][ "Spotify" ].split( "," );
-
-	playPattern( pattern, spotify_tracks, float( config[ "Song" ][ "Delay" ] ) );
+	playPattern( song_pattern, spotify_tracks, delay );
 
 	
