@@ -1,38 +1,39 @@
 import midi;
+import fractions;
 
-def tempoToSecondsPerTick( t, r ):
-  seconds_per_tick = 60 / t / r;
-  return seconds_per_tick;
+def mpqnToSecondsPerTick( m, r ):
+  quarter_notes_per_second = fractions.Fraction( 1000000, m );
+  ticks_per_second = quarter_notes_per_second * r;
+  return fractions.Fraction( ticks_per_second.denominator, ticks_per_second.numerator );
 
 def tempoStepsToTimeSteps( p ):
-  resolution = p.resolution;
-  tempo_track = p[ 0 ];
-
   # the default tempo per midi standard, although it can and will
   # be replaced if there is a manual tempo event on tick zero
-  default = ( 0, 0, tempoToSecondsPerTick( 120, resolution ) );
-  result = [ default ];
+  result = [ ( 0, 0, mpqnToSecondsPerTick( 500000, p.resolution ) ) ];
 
-  running_total = 0;
-  previous_tick = 0;
-  current_ttspt = 0;
-  
-  tempo_track.sort( key = lambda x: x.tick );
-  for event in tempo_track:
-    if( not isinstance( event, midi.SetTempoEvent ) ):
-      continue;
+  running_total_seconds = 0.0;
+  seconds_per_tick = 0;
+  previous_event = midi.Event( tick = 0 );
 
-    tempo_step = ( event.tick, event.bpm );
-    running_total += ( tempo_step[0] - previous_tick ) * current_ttspt;
-    current_ttspt = tempoToSecondsPerTick( tempo_step[1], resolution );
-    previous_tick = tempo_step[0];
+  tempo_events = [ x for x in p[ 0 ] if isinstance( x, midi.SetTempoEvent ) ];
+  tempo_events.sort( key = lambda x: x.tick );
 
-    # if this is a new tick zero tempo, we can get rid of the default one
+  for event in tempo_events:
+    ticks_since_previous_event = event.tick - previous_event.tick;
+    seconds_elapsed_since_previous = ticks_since_previous_event * seconds_per_tick;
+    running_total_seconds += seconds_elapsed_since_previous;
+
+    new_seconds_per_tick = mpqnToSecondsPerTick( event.mpqn, p.resolution );
+
+    time_step = ( running_total_seconds, event.tick, new_seconds_per_tick );
     if( event.tick == 0 ):
-      result.remove( default );
+      result = [ time_step ];
+    else:
+      result.append( time_step );
 
-    result.append( ( running_total, tempo_step[0], current_ttspt ) );
-  
+    previous_event = event;
+    seconds_per_tick = new_seconds_per_tick;
+
   result.sort( key = lambda x: x[0] );
   return result;
 
